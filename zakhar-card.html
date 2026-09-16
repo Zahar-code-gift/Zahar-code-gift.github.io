@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Захар Колот — Веб-разработка</title>
+<meta name="description" content="Создаю сайты, настраиваю рекламу, решаю IT-задачи.">
+<meta property="og:title" content="Захар Колот — Веб-разработка и IT">
+<meta property="og:description" content="Сайты, таргет, рассылки, IT-решения для бизнеса">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23111'/%3E%3Ctext x='16' y='22' text-anchor='middle' fill='%2310b981' font-size='18' font-weight='bold' font-family='monospace'%3EZ%3C/text%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+:root{--bg:#f8f9fa;--bg2:#ffffff;--text:#1a1a2e;--muted:#6b7280;--accent:#10b981;--accent2:#059669;--card:#ffffff;--border:#e5e7eb;--shadow:rgba(0,0,0,.06);--shadow2:rgba(0,0,0,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);max-width:100vw;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;overflow-x:hidden;line-height:1.6}
+a{color:var(--text);text-decoration:none;transition:all .3s}a:hover{color:var(--accent)}
+h1,h2,h3{font-weight:600;letter-spacing:-.03em}
+.grid-overlay{position:fixed;inset:0;background-image:linear-gradient(rgba(0,0,0,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.02) 1px,transparent 1px);background-size:50px 50px;z-index:-1;pointer-events:none}
+
+/* Nav */
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 3rem;position:fixed;top:0;width:100%;z-index:100;background:rgba(248,249,250,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:700}
+.logo .z{color:var(--accent);font-family:monospace;font-size:1.3rem;background:var(--text);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;align-items:center;gap:1.5rem}
+.nav-links a{font-size:.875rem;color:var(--muted);font-weight:500}
+.btn{padding:.55rem 1.2rem;-webkit-tap-highlight-color:transparent;border-radius:10px;font-weight:600;cursor:pointer;border:none;color:#fff;background:var(--accent);font-family:inherit;font-size:.875rem;transition:all .25s;box-shadow:0 2px 8px rgba(16,185,129,.2)}
+.btn:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(16,185,129,.3)}
+.btn:active{transform:translateY(1px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);box-shadow:none}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);background:rgba(16,185,129,.04)}
+.menu-btn{display:none}
+
+/* Hero */
+.hero{padding:8rem 2rem 3rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1.25rem}
+.badge{padding:.4rem .9rem;border-radius:20px;font-size:.75rem;font-weight:600;color:var(--accent);background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.15)}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);max-width:720px;line-height:1.12}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);max-width:480px;font-size:1rem}
+.hero-buttons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* Trust counter */
+.trust-bar{display:flex;justify-content:center;gap:3rem;padding:2rem;flex-wrap:wrap}
+.trust-item{text-align:center}
+.trust-num{font-size:1.75rem;font-weight:700;color:var(--accent)}
+.trust-label{font-size:.75rem;color:var(--muted);margin-top:2px}
+
+/* Marquee */
+.marquee-section{padding:1.5rem 0;overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2)}
+.marquee-track{display:flex;gap:12px;width:max-content}
+.mr .marquee-track{animation:scrollR 40s linear infinite}
+.ml .marquee-track{animation:scrollL 40s linear infinite}
+@keyframes scrollR{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes scrollL{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+.mc{flex-shrink:0;padding:8px 20px;border-radius:10px;border:1px solid var(--border);font-size:.8rem;font-weight:500;white-space:nowrap;background:var(--bg);color:var(--muted)}
+.ml{margin-top:12px}
+
+/* Services */
+.section{padding:5rem 2rem}
+.section h2{text-align:center;font-size:1.75rem;margin-bottom:2rem}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:900px;margin:0 auto}
+.scard{background:var(--card);padding:1.75rem 1.2rem;border-radius:14px;border:1px solid var(--border);transition:all .3s;text-align:center}
+.scard:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 12px 32px var(--shadow)}
+.scard svg{width:28px;height:28px;stroke:var(--accent);fill:none;stroke-width:1.5;margin-bottom:12px}
+.scard h3{font-size:.95rem;margin-bottom:4px}
+.scard p{font-size:.72rem;color:var(--muted);line-height:1.5}
+
+/* Why me */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:800px;margin:0 auto}
+.wcard{background:var(--card);padding:2rem 1.5rem;border-radius:14px;border:1px solid var(--border);text-align:center;transition:all .3s}
+.wcard:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shadow)}
+.wcard .wicon{font-size:2rem;margin-bottom:10px}
+.wcard h3{font-size:1rem;margin-bottom:6px}
+.wcard p{font-size:.8rem;color:var(--muted)}
+
+/* Pricing */
+.pricing-bar{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;max-width:800px;margin:2rem auto 0}
+.price-chip{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;text-align:center;flex:1;min-width:200px;transition:all .3s}
+.price-chip:hover{border-color:var(--accent);box-shadow:0 8px 24px var(--shadow)}
+.price-chip h4{font-size:.85rem;color:var(--muted);font-weight:500;margin-bottom:4px}
+.price-chip .price{font-size:1.5rem;font-weight:700;color:var(--accent)}
+
+/* Portfolio */
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;max-width:1100px;margin:0 auto}
+.pcard{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--border);transition:all .3s;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent}
+.pcard:hover{border-color:var(--accent);transform:translateY(-5px);box-shadow:0 16px 40px var(--shadow2)}
+.pprev{height:170px;overflow:hidden;position:relative}
+.pprev>div{width:100%;height:100%}
+.plink{position:absolute;top:10px;right:10px;width:30px;height:30px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:.7;transition:opacity .3s;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.pcard:hover .plink{opacity:1}
+.plink svg{width:13px;height:13px;stroke:var(--accent);fill:none;stroke-width:2}
+.pinfo{padding:14px 18px}
+.pinfo h3{font-size:.95rem;margin-bottom:3px}
+.pinfo p{font-size:.72rem;color:var(--muted)}
+
+/* 3D Sphere */
+.gallery-container{position:relative;height:300vh;width:100%;background:linear-gradient(180deg,var(--bg) 0%,#f0fdf4 20%,#ecfdf5 50%,#f0fdf4 80%,var(--bg) 100%)}
+.scene{position:sticky;top:0;height:100vh;width:100%;display:flex;justify-content:center;align-items:center;perspective:1200px;overflow:hidden;-webkit-overflow-scrolling:touch}
+.sphere{position:relative;width:0;height:0;transform-style:preserve-3d}
+.clay-card{position:absolute;width:150px;height:200px;left:-75px;top:-100px;background:var(--card);border-radius:14px;padding:6px;transform-style:preserve-3d;backface-visibility:visible;border:2px solid rgba(0,0,0,.06);box-shadow:0 8px 24px rgba(0,0,0,.08);transition:all .4s}
+.ci{width:100%;height:100%;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:600;color:rgba(0,0,0,.15);text-align:center;padding:8px;transition:all .4s}
+.clay-card.active-card{box-shadow:0 12px 40px rgba(16,185,129,.15);border-color:var(--accent)}
+.clay-card.active-card .ci{color:rgba(0,0,0,.4)}
+.floating-text{position:sticky;top:50%;transform:translateY(-50%);width:300px;z-index:10;margin-left:10%;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);padding:1.5rem;border-radius:14px;border:1px solid var(--border);box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.floating-text h2{font-size:1.75rem;margin-bottom:.75rem;color:#111}
+.floating-text p{color:#4b5563;font-size:.875rem}
+.network-lines{position:absolute;inset:0;pointer-events:none;z-index:-1}
+
+/* CTA */
+.cta-section{padding:6rem 2rem;text-align:center;background:linear-gradient(180deg,var(--bg),#e8f5e9)}
+.cta-card{max-width:560px;margin:0 auto;background:var(--card);padding:3rem;border-radius:20px;border:1px solid var(--border);box-shadow:0 20px 60px var(--shadow2)}
+.cta-card h2{font-size:clamp(1.75rem,3vw,2.25rem);margin-bottom:.5rem}
+.cta-card p{color:var(--muted);margin-bottom:1.5rem}
+.large-btn{font-size:1rem;padding:.85rem 2rem;border-radius:12px}
+.contact-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.cbtn{display:flex;align-items:center;gap:8px;padding:.6rem 1.2rem;border-radius:10px;font-size:.8rem;background:var(--bg);color:var(--text);border:1px solid var(--border);cursor:pointer;transition:all .2s;font-weight:500}
+.cbtn:hover{border-color:var(--accent);color:var(--accent)}
+.cbtn svg{width:16px;height:16px}
+
+/* Share toast */
+.share-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:#fff;padding:.75rem 1.5rem;border-radius:10px;font-size:.85rem;transition:transform .3s;z-index:200;pointer-events:none}
+.share-toast.show{transform:translateX(-50%) translateY(0)}
+
+/* Footer */
+.footer{text-align:center;padding:2rem;color:var(--muted);font-size:.75rem;border-top:1px solid var(--border)}
+
+/* Scroll animations */
+.anim{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.anim.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .menu-btn{display:flex}
+  .navbar{padding:.75rem 1rem}
+  .hero{padding:5.5rem 1.25rem 1.5rem}
+  .hero h1{font-size:1.85rem}
+  .hero p{font-size:.9rem}
+  .hero-buttons{width:100%}
+  .hero-buttons .btn{flex:1;text-align:center;min-width:140px}
+  .trust-bar{gap:1.25rem;padding:1.5rem 1rem}
+  .trust-num{font-size:1.4rem}
+  .trust-label{font-size:.7rem}
+  .services-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .scard{padding:1.25rem 1rem}
+  .scard svg{width:24px;height:24px}
+  .scard h3{font-size:.85rem}
+  .scard p{font-size:.68rem}
+  .why-grid{grid-template-columns:1fr;gap:10px}
+  .wcard{padding:1.5rem 1rem}
+  .pricing-bar{flex-direction:column;align-items:stretch;gap:10px}
+  .price-chip{min-width:auto}
+  .portfolio-grid{grid-template-columns:1fr;gap:12px}
+  .pprev{height:150px}
+  .pinfo{padding:12px 14px}
+  .pinfo h3{font-size:.9rem}
+  .floating-text{position:absolute;top:auto;bottom:5%;left:5%;right:5%;margin-left:0;width:auto;text-align:center;padding:1rem;border-radius:12px}
+  .floating-text h2{font-size:1.25rem;margin-bottom:.5rem}
+  .floating-text p{font-size:.8rem}
+  .clay-card{width:100px;height:135px;left:-50px;top:-67px;border-radius:10px;padding:4px}
+  .ci{font-size:.6rem;border-radius:7px}
+  .gallery-container{height:250vh}
+  .cta-card{margin:0 1rem;padding:1.75rem}
+  .cta-card h2{font-size:1.5rem}
+  .large-btn{width:100%;text-align:center;display:block}
+  .contact-row{gap:8px}
+  .cbtn{padding:.5rem 1rem;font-size:.75rem}
+  .cbtn svg{width:14px;height:14px}
+  .section{padding:3.5rem 1.25rem}
+  .section h2{font-size:1.4rem;margin-bottom:1.5rem}
+  .marquee-section{padding:1rem 0}
+  .mc{padding:6px 14px;font-size:.72rem}
+  .ml{margin-top:8px}
+  .share-toast{font-size:.8rem;padding:.6rem 1.2rem}
+}
+@media(max-width:480px){
+  .services-grid{grid-template-columns:1fr}
+  .trust-bar{gap:.75rem}
+  .trust-item{min-width:70px}
+  .hero h1{font-size:1.6rem}
+  .hero-buttons{flex-direction:column}
+  .hero-buttons .btn{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="grid-overlay"></div>
+
+<nav class="navbar">
+<div class="logo"><span class="z">Z</span> Захар Колот</div>
+<div class="nav-links">
+<a href="#services">Услуги</a><a href="#portfolio">Работы</a><a href="#pricing">Цены</a><a href="#contact">Контакты</a>
+<a href="javascript:void(0)" onclick="window.open('https://wa.me/79283237534','_blank')" class="btn">Написать</a>
+</div>
+<button class="btn menu-btn" onclick="window.open('https://wa.me/79283237534','_blank')">Написать</button>
+</nav>
+
+<header class="hero">
+<div class="badge">✦ Веб-разработка и IT</div>
+<h1>Создаю <span>сайты</span>, которые приносят клиентов</h1>
+<p>Разработка сайтов, настройка рекламы, IT-решения для бизнеса</p>
+<div class="hero-buttons">
+<a href="javascript:void(0)" onclick="window.open('https://wa.me/79283237534','_blank')" class="btn">Обсудить проект</a>
+<a href="#portfolio" class="btn btn-outline">Смотреть работы ↓</a>
+</div>
+</header>
+
+<div class="trust-bar">
+<div class="trust-item"><div class="trust-num">5+</div><div class="trust-label">Проектов</div></div>
+<div class="trust-item"><div class="trust-num">3 года</div><div class="trust-label">Опыт в IT</div></div>
+<div class="trust-item"><div class="trust-num">24/7</div><div class="trust-label">На связи</div></div>
+<div class="trust-item"><div class="trust-num">РФ</div><div class="trust-label">Работаю по всей России</div></div>
+</div>
+
+<section class="marquee-section">
+<div class="mr"><div class="marquee-track" id="m1"></div></div>
+<div class="ml"><div class="marquee-track" id="m2"></div></div>
+</section>
+
+<section class="section" id="services">
+<h2>Услуги</h2>
+<div class="services-grid">
+<div class="scard anim"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><h3>Сайты</h3><p>Лендинги, визитки, одностраничники</p></div>
+<div class="scard anim"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><h3>Таргет</h3><p>Реклама в Яндекс Директе</p></div>
+<div class="scard anim"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg><h3>Рассылки</h3><p>WhatsApp, Telegram рассылки</p></div>
+<div class="scard anim"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><h3>IT-решения</h3><p>Боты, автоматизация, интеграции</p></div>
+</div>
+</section>
+
+<section class="section" style="padding-top:2rem">
+<h2>Почему я</h2>
+<div class="why-grid">
+<div class="wcard anim"><div class="wicon">⚡</div><h3>Быстро</h3><p>Сайт за 3–5 дней. Не затягиваю сроки</p></div>
+<div class="wcard anim"><div class="wicon">💬</div><h3>На связи</h3><p>Отвечаю в течение часа. Всегда на связи в WhatsApp и Telegram</p></div>
+<div class="wcard anim"><div class="wicon">🎯</div><h3>На результат</h3><p>Делаю не «красивый сайт», а инструмент для получения клиентов</p></div>
+</div>
+</section>
+
+<section class="section" id="pricing" style="padding-top:2rem">
+<h2>Цены</h2>
+<div class="pricing-bar">
+<div class="price-chip anim"><h4>Сайт-визитка</h4><div class="price">от 10 000 ₽</div></div>
+<div class="price-chip anim"><h4>Лендинг</h4><div class="price">от 15 000 ₽</div></div>
+<div class="price-chip anim"><h4>Таргет / мес.</h4><div class="price">от 5 000 ₽</div></div>
+</div>
+</section>
+
+<section class="section" id="portfolio">
+<h2>Последние работы</h2>
+<div class="portfolio-grid">
+<div class="pcard anim" onclick="window.open('https://yinger.dev','_blank')"><div class="pprev"><div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#e94560)"></div><div class="plink"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></div></div><div class="pinfo"><h3>Yinger Dev</h3><p>3D-портфолио разработчика</p></div></div>
+<div class="pcard anim" onclick="window.open('https://www.tbp.studio','_blank')"><div class="pprev"><div style="width:100%;height:100%;background:linear-gradient(135deg,#111,#10b981)"></div><div class="plink"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></div></div><div class="pinfo"><h3>TBP Studio</h3><p>Креативная студия с 3D</p></div></div>
+<div class="pcard anim" onclick="window.open('https://kabinet-podologa-kazan.ru','_blank')"><div class="pprev"><div style="width:100%;height:100%;background:linear-gradient(135deg,#6B8F71,#E8EDE5)"></div><div class="plink"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></div></div><div class="pinfo"><h3>Кабинет подолога</h3><p>Сайт для подолога в Казани</p></div></div>
+<div class="pcard anim" onclick="window.open('https://neverhack.com','_blank')"><div class="pprev"><div style="width:100%;height:100%;background:linear-gradient(135deg,#0a192f,#64ffda)"></div><div class="plink"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></div></div><div class="pinfo"><h3>NeverHack</h3><p>Кибербезопасность</p></div></div>
+<div class="pcard anim" onclick="window.open('https://www.hape.io','_blank')"><div class="pprev"><div style="width:100%;height:100%;background:linear-gradient(135deg,#ff6b6b,#ffd93d)"></div><div class="plink"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></div></div><div class="pinfo"><h3>HAPE</h3><p>3D-мир бренда с WebGL</p></div></div>
+</div>
+</section>
+
+<section class="gallery-container">
+<div class="floating-text"><h2 id="dt">Сайты для бизнеса</h2><p id="dd">Индивидуальный дизайн. Каждый проект — с нуля.</p></div>
+<div class="scene"><div class="sphere" id="sphere"></div></div>
+</section>
+
+<section class="cta-section" id="contact">
+<div class="cta-card">
+<h2>Давайте работать вместе</h2>
+<p>Расскажите о проекте — предложу решение</p>
+<a href="javascript:void(0)" onclick="window.open('https://wa.me/79283237534?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82','_blank')" class="btn large-btn">Написать в WhatsApp</a>
+<div class="contact-row">
+<a href="javascript:void(0)" onclick="window.open('https://t.me/kolot_z','_blank')" class="cbtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+<a href="tel:+79283237534" class="cbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>Позвонить</a>
+<button class="cbtn" style="font-family:inherit" onclick="shareLink()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>Поделиться</button>
+</div>
+</div>
+</section>
+
+<footer class="footer">© 2026 Захар Колот · Веб-разработка и IT-решения</footer>
+<div class="share-toast" id="toast">Ссылка скопирована!</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// Marquee
+var mi=['Лендинги','Сайты-визитки','Таргет Яндекс','Telegram-боты','WhatsApp-рассылки','Яндекс Директ','IT-автоматизация','Одностраничники','3D-сайты','SEO-продвижение'];
+function bm(id,items){var t=document.getElementById(id),h='';for(var r=0;r<3;r++)items.forEach(function(s){h+='<div class="mc">'+s+'</div>';});t.innerHTML=h;}
+bm('m1',mi);bm('m2',mi.slice().reverse());
+
+// Sphere
+var sg=['linear-gradient(135deg,#10b981,#e8f5e9)','linear-gradient(135deg,#6366f1,#ede9fe)','linear-gradient(135deg,#f59e0b,#fef3c7)','linear-gradient(135deg,#ef4444,#fee2e2)','linear-gradient(135deg,#0ea5e9,#e0f2fe)','linear-gradient(135deg,#a855f7,#f3e8ff)','linear-gradient(135deg,#14b8a6,#ccfbf1)','linear-gradient(135deg,#ec4899,#fce7f3)','linear-gradient(135deg,#eab308,#fef9c3)','linear-gradient(135deg,#22c55e,#dcfce7)','linear-gradient(135deg,#3b82f6,#dbeafe)','linear-gradient(135deg,#f97316,#ffedd5)'];
+var sl=['Web','UI/UX','Ads','Bot','SEO','CRM','API','App','3D','SPA','PWA','MVP'];
+var gi=[];for(var i=0;i<24;i++)gi.push({g:sg[i%sg.length],l:sl[i%sl.length]});
+var tc=[{t:'Сайты для бизнеса',d:'Индивидуальный дизайн. С нуля, никаких шаблонов.'},{t:'Реклама и продвижение',d:'Целевые клиенты из поиска. Реклама, которая окупается.'},{t:'Рассылки и автоматизация',d:'WhatsApp, Telegram рассылки, чат-боты.'},{t:'IT под ключ',d:'От лендинга до сложных интеграций. Быстро.'}];
+var sp=document.getElementById('sphere'),rd=window.innerWidth<768?180:350;
+gi.forEach(function(item,i){var c=document.createElement('div');c.classList.add('clay-card');var n=document.createElement('div');n.classList.add('ci');n.style.background=item.g;n.textContent=item.l;c.appendChild(n);var phi=Math.acos(1-(2*(i+.5))/gi.length),theta=Math.PI*(1+Math.sqrt(5))*i,x=rd*Math.cos(theta)*Math.sin(phi),y=rd*Math.sin(theta)*Math.sin(phi),z=rd*Math.cos(phi);c.style.transform='translate3d('+x+'px,'+y+'px,'+z+'px) rotateY('+Math.atan2(x,z)*(180/Math.PI)+'deg) rotateX('+Math.asin(-y/rd)*(180/Math.PI)+'deg)';sp.appendChild(c);});
+gsap.to(sp,{rotateY:720,rotateX:45,ease:'none',scrollTrigger:{trigger:'.gallery-container',start:'top top',end:'bottom bottom',scrub:1,onUpdate:function(s){uac(s.progress)}}});
+var te=document.getElementById('dt'),de=document.getElementById('dd'),ac=document.querySelectorAll('.sphere .clay-card');
+function uac(p){var ti=Math.floor(p*tc.length)%tc.length;if(te.innerText!==tc[ti].t){gsap.to([te,de],{opacity:0,duration:.2,onComplete:function(){te.innerText=tc[ti].t;de.innerText=tc[ti].d;gsap.to([te,de],{opacity:1,duration:.2});}});}var fi=Math.floor(p*gi.length);ac.forEach(function(c,i){if(Math.abs(i-fi)<2)c.classList.add('active-card');else c.classList.remove('active-card');});}
+
+// Scroll animations
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.anim').forEach(function(el,i){el.style.transitionDelay=(i%5)*80+'ms';obs.observe(el);});
+
+// Share
+function shareLink(){
+  var url=window.location.href;
+  if(navigator.clipboard){navigator.clipboard.writeText(url);}
+  else{var t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);}
+  var toast=document.getElementById('toast');toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},2000);
+}
+
+// Smooth scroll
+document.addEventListener('click',function(e){var l=e.target.closest('a[href^="#"]');if(!l)return;e.preventDefault();var t=document.getElementById(l.getAttribute('href').substring(1));if(t)t.scrollIntoView({behavior:'smooth'});},true);
+</script>
+</body>
+</html>
